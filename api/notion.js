@@ -15,7 +15,7 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const response = await fetch('https://api.notion.com/v1/databases/' + dbId + '/query', {
+    const dbResponse = await fetch('https://api.notion.com/v1/databases/' + dbId + '/query', {
       method: 'POST',
       headers: {
         'Authorization': 'Bearer ' + key,
@@ -25,11 +25,12 @@ module.exports = async function handler(req, res) {
       body: JSON.stringify({ page_size: 50 })
     });
 
-    const data = await response.json();
-    const results = (data.results || []).map(function(page) {
+    const dbData = await dbResponse.json();
+    const pages = dbData.results || [];
+
+    const results = await Promise.all(pages.map(async function(page) {
       const props = page.properties || {};
       let title = '';
-      let content = '';
       let date = page.created_time ? page.created_time.split('T')[0] : '';
 
       Object.keys(props).forEach(function(k) {
@@ -40,12 +41,29 @@ module.exports = async function handler(req, res) {
         if (p.type === 'date' && p.date && p.date.start) {
           date = p.date.start;
         }
-        if (p.type === 'rich_text' && p.rich_text && p.rich_text.length) {
-          content += p.rich_text.map(function(t) { return t.plain_text; }).join('') + ' ';
-        }
       });
 
-      content = content.trim();
+      let content = '';
+      try {
+        const blocksResponse = await fetch('https://api.notion.com/v1/blocks/' + page.id + '/children?page_size=100', {
+          headers: {
+            'Authorization': 'Bearer ' + key,
+            'Notion-Version': '2022-06-28'
+          }
+        });
+        const blocksData = await blocksResponse.json();
+        const blocks = blocksData.results || [];
+        content = blocks.map(function(block) {
+          const type = block.type;
+          if (block[type] && block[type].rich_text) {
+            return block[type].rich_text.map(function(t) { return t.plain_text; }).join('');
+          }
+          return '';
+        }).filter(Boolean).join('\n');
+      } catch(e) {
+        content = '';
+      }
+
       const jobMatch = content.match(/Job[s]?\s*=\s*([^\n,]+)/i);
       let context = 'Personal';
       if (jobMatch) {
@@ -57,7 +75,7 @@ module.exports = async function handler(req, res) {
       }
 
       return { title: title || 'Untitled', date: date, content: content, context: context };
-    });
+    }));
 
     return res.status(200).json({ results: results, count: results.length });
   } catch (error) {
