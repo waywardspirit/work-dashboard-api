@@ -15,9 +15,12 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .config-label { font-size: 12px; color: #666; white-space: nowrap; }
 .config-input { font-size: 12px; padding: 5px 9px; border-radius: 8px; border: 0.5px solid #ddd; background: #fff; color: #1a1a1a; }
 .config-input:focus { outline: none; border-color: #999; }
+.btn-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 .sync-btn { font-size: 12px; padding: 6px 16px; border-radius: 8px; border: 0.5px solid #ccc; background: #fff; color: #1a1a1a; cursor: pointer; white-space: nowrap; }
 .sync-btn:hover { background: #f0efec; }
 .sync-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.reset-btn { font-size: 11px; padding: 5px 10px; border-radius: 8px; border: 0.5px solid #e0e0db; background: transparent; color: #aaa; cursor: pointer; }
+.reset-btn:hover { color: #666; border-color: #ccc; }
 .status { font-size: 12px; color: #999; }
 .metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-bottom: 1.5rem; }
 .metric { background: #f0efec; border-radius: 8px; padding: 12px 14px; }
@@ -38,8 +41,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .sec-view.active { display: block; }
 .card { background: #fff; border: 0.5px solid #e8e8e5; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 12px; }
 .card-title { font-size: 11px; font-weight: 500; color: #999; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 1rem; }
-.two-col { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 12px; margin-bottom: 12px; }
-@media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } .metrics { grid-template-columns: repeat(2, 1fr); } }
 .insight-item { padding: 10px 0; border-bottom: 0.5px solid #f0efec; }
 .insight-item:last-child { border-bottom: none; }
 .tag { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 20px; margin-bottom: 4px; }
@@ -47,6 +48,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .tag-action { background: #faeeda; color: #854f0b; }
 .tag-opportunity { background: #eaf3de; color: #3b6d11; }
 .tag-followup { background: #fcebeb; color: #a32d2d; }
+.tag-blocker { background: #fbeaf0; color: #993556; }
 .insight-text { font-size: 13px; line-height: 1.5; }
 .insight-meta { font-size: 11px; color: #aaa; margin-top: 3px; }
 .priority-item { display: flex; gap: 10px; padding: 10px 0; border-bottom: 0.5px solid #f0efec; align-items: flex-start; }
@@ -63,8 +65,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .recap-section { margin-bottom: 14px; }
 .recap-label { font-size: 11px; font-weight: 500; color: #999; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
 .recap-text { font-size: 13px; line-height: 1.6; color: #333; }
-.project-group { margin-bottom: 1rem; }
-.project-name { font-size: 12px; font-weight: 500; color: #666; text-transform: uppercase; letter-spacing: 0.06em; padding: 6px 0; border-bottom: 0.5px solid #f0efec; margin-bottom: 8px; }
 .upload-zone { border: 0.5px dashed #ccc; border-radius: 12px; padding: 2rem; text-align: center; margin-bottom: 12px; cursor: pointer; }
 .upload-zone:hover { background: #f0efec; }
 .upload-label { font-size: 13px; color: #666; }
@@ -73,13 +73,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .file-pill { font-size: 11px; padding: 3px 10px; border-radius: 20px; background: #f0efec; color: #666; border: 0.5px solid #e0e0db; display: flex; align-items: center; gap: 5px; }
 .file-pill button { background: none; border: none; cursor: pointer; color: #aaa; font-size: 13px; padding: 0; line-height: 1; }
 .empty { font-size: 13px; color: #aaa; padding: 1rem 0; }
-.error-box { font-size: 12px; color: #a32d2d; background: #fcebeb; border-radius: 8px; padding: 10px 14px; }
 .bottom-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; margin-bottom: 1rem; }
 .bottom-btn { font-size: 12px; padding: 6px 12px; border-radius: 8px; border: 0.5px solid #e0e0db; background: transparent; color: #666; cursor: pointer; }
 .bottom-btn:hover { background: #f0efec; color: #1a1a1a; }
 .analyze-btn { font-size: 12px; padding: 6px 16px; border-radius: 8px; border: 0.5px solid #ccc; background: #fff; color: #1a1a1a; cursor: pointer; margin-bottom: 12px; }
 .analyze-btn:hover { background: #f0efec; }
 .file-result { font-size: 13px; line-height: 1.7; color: #333; white-space: pre-wrap; }
+.new-badge { font-size: 10px; background: #eaf3de; color: #3b6d11; padding: 1px 6px; border-radius: 10px; margin-left: 6px; }
 </style>
 </head>
 <body>
@@ -91,17 +91,20 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 
   <div class="config-bar">
     <span class="config-label">Vercel URL</span>
-    <input class="config-input" id="vercel-url" value="work-dashboard-api.vercel.app" style="width:220px;" />
+    <input class="config-input" id="vercel-url" value="work-dashboard-api.vercel.app" style="width:200px;" />
     <span class="config-label">DB ID</span>
-    <input class="config-input" id="db-id" value="332cd826f06481e88061c7e526648e67" style="width:240px;" />
-    <button class="sync-btn" id="sync-btn" onclick="loadAndAnalyze()">Sync + analyze</button>
-    <span class="status" id="status"></span>
+    <input class="config-input" id="db-id" value="332cd826f06481e88061c7e526648e67" style="width:230px;" />
+    <div class="btn-row">
+      <button class="sync-btn" id="sync-btn" onclick="loadAndAnalyze(false)">Sync new notes</button>
+      <button class="reset-btn" onclick="loadAndAnalyze(true)">Full re-sync</button>
+      <span class="status" id="status"></span>
+    </div>
   </div>
 
   <div class="metrics">
     <div class="metric"><div class="metric-label">Total notes</div><div class="metric-value" id="m-total">—</div><div class="metric-sub">all contexts</div></div>
-    <div class="metric"><div class="metric-label">Contexts found</div><div class="metric-value" id="m-contexts">—</div><div class="metric-sub">from JOB tags</div></div>
-    <div class="metric"><div class="metric-label">Action items</div><div class="metric-value" id="m-actions">—</div><div class="metric-sub">this sync</div></div>
+    <div class="metric"><div class="metric-label">New this sync</div><div class="metric-value" id="m-new">—</div><div class="metric-sub">notes processed</div></div>
+    <div class="metric"><div class="metric-label">Action items</div><div class="metric-value" id="m-actions">—</div><div class="metric-sub">for Bex</div></div>
     <div class="metric"><div class="metric-label">Insights</div><div class="metric-value" id="m-insights">—</div><div class="metric-sub">this sync</div></div>
   </div>
 
@@ -122,203 +125,307 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
       <div id="file-result"><div class="empty">Upload files and hit analyze.</div></div>
     </div>
     <div class="bottom-btns">
-      <button class="bottom-btn" onclick="crossRef()">Cross-reference with notes</button>
+      <button class="bottom-btn" onclick="window.open('https://claude.ai','_blank')">Cross-reference with notes</button>
     </div>
   </div>
 </div>
 
 <script>
-const CLAUDE_API = '/api/claude';
-const uploadedFileData = [];
-let allNotesByContext = {};
+var CLAUDE_API = '/api/claude';
+var uploadedFileData = [];
+var allNotesByContext = {};
+var STORAGE_KEY = 'seo_hub_cache';
 
-const CONTEXT_SECTIONS = {
+var CONTEXT_SECTIONS = {
   default: ['insights','priorities','actions','recap'],
   'UC Davis': ['actions'],
-  'Personal': ['insights','priorities','recap'],
+  'Personal': ['insights','priorities','recap']
 };
 
-const SECTION_LABELS = {
+var SECTION_LABELS = {
   insights: 'Insights + patterns',
   priorities: 'This week',
   actions: 'Follow-ups',
-  recap: 'Week recap',
+  recap: 'Week recap'
 };
 
 function getSections(ctx) {
   return CONTEXT_SECTIONS[ctx] || CONTEXT_SECTIONS.default;
 }
 
-function switchContext(name, el) {
-  document.querySelectorAll('.ctx-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.ctx-view').forEach(v => v.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('ctx-' + cssId(name)).classList.add('active');
+function getCache() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e) { return {}; }
+}
+
+function saveCache(cache) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(cache)); } catch(e) {}
 }
 
 function cssId(str) {
   return str.toLowerCase().replace(/[^a-z0-9]/g, '_');
 }
 
+function switchContext(name, el) {
+  document.querySelectorAll('.ctx-tab').forEach(function(t) { t.classList.remove('active'); });
+  document.querySelectorAll('.ctx-view').forEach(function(v) { v.classList.remove('active'); });
+  el.classList.add('active');
+  document.getElementById('ctx-' + cssId(name)).classList.add('active');
+}
+
 function switchSection(ctxSafe, secName, el) {
-  const parent = el.closest('.ctx-view');
-  parent.querySelectorAll('.sec-tab').forEach(t => t.classList.remove('active'));
-  parent.querySelectorAll('.sec-view').forEach(v => v.classList.remove('active'));
+  var parent = el.closest('.ctx-view');
+  parent.querySelectorAll('.sec-tab').forEach(function(t) { t.classList.remove('active'); });
+  parent.querySelectorAll('.sec-view').forEach(function(v) { v.classList.remove('active'); });
   el.classList.add('active');
   document.getElementById(ctxSafe + '_' + secName).classList.add('active');
 }
 
-function buildContextTab(ctx, count) {
-  const safe = cssId(ctx);
-  const sections = getSections(ctx);
+function buildContextTab(ctx, count, isNew) {
+  var safe = cssId(ctx);
+  var sections = getSections(ctx);
+  var existing = document.querySelector('[data-ctx="' + ctx + '"]');
+  if (existing) {
+    existing.innerHTML = ctx + ' <span class="ct">(' + count + ')</span>' + (isNew ? '<span class="new-badge">updated</span>' : '');
+    return;
+  }
 
-  const tabEl = document.createElement('div');
+  var tabEl = document.createElement('div');
   tabEl.className = 'ctx-tab';
   tabEl.setAttribute('data-ctx', ctx);
-  tabEl.innerHTML = ctx + ' <span class="ct">(' + count + ')</span>';
-  tabEl.onclick = () => switchContext(ctx, tabEl);
+  tabEl.innerHTML = ctx + ' <span class="ct">(' + count + ')</span>' + (isNew ? '<span class="new-badge">updated</span>' : '');
+  tabEl.onclick = function() { switchContext(ctx, tabEl); };
 
-  const secTabsHtml = sections.map((s, i) =>
-    '<div class="sec-tab ' + (i===0?'active':'') + '" onclick="switchSection(\'' + safe + '\',\'' + s + '\',this)">' + SECTION_LABELS[s] + '</div>'
-  ).join('');
+  var secTabsHtml = sections.map(function(s, i) {
+    return '<div class="sec-tab ' + (i===0?'active':'') + '" onclick="switchSection(\'' + safe + '\',\'' + s + '\',this)">' + SECTION_LABELS[s] + '</div>';
+  }).join('');
 
-  const secViewsHtml = sections.map((s, i) =>
-    '<div id="' + safe + '_' + s + '" class="sec-view ' + (i===0?'active':'') + '"><div class="card"><div class="card-title">' + SECTION_LABELS[s] + '</div><div id="' + safe + '_' + s + '_content"><div class="empty">Analyzing...</div></div></div></div>'
-  ).join('');
+  var secViewsHtml = sections.map(function(s, i) {
+    return '<div id="' + safe + '_' + s + '" class="sec-view ' + (i===0?'active':'') + '"><div class="card"><div class="card-title">' + SECTION_LABELS[s] + '</div><div id="' + safe + '_' + s + '_content"><div class="empty">Loading...</div></div></div></div>';
+  }).join('');
 
-  const digDeeper = ctx === 'Toast'
-    ? '<button class="bottom-btn" onclick="window.open(\'https://claude.ai\',\'_blank\')">Dig deeper in Claude</button>'
-    : '';
-
-  const viewEl = document.createElement('div');
+  var viewEl = document.createElement('div');
   viewEl.id = 'ctx-' + safe;
   viewEl.className = 'ctx-view';
-  viewEl.innerHTML = '<div class="section-tabs">' + secTabsHtml + '</div>' + secViewsHtml + '<div class="bottom-btns">' + digDeeper + '</div>';
+  viewEl.innerHTML = '<div class="section-tabs">' + secTabsHtml + '</div>' + secViewsHtml +
+    '<div class="bottom-btns"><button class="bottom-btn" onclick="window.open(\'https://claude.ai\',\'_blank\')">Dig deeper in Claude</button></div>';
 
-  const tabsContainer = document.getElementById('context-tabs');
+  var tabsContainer = document.getElementById('context-tabs');
   tabsContainer.insertBefore(tabEl, tabsContainer.querySelector('[data-ctx="files"]'));
   document.querySelector('.container').insertBefore(viewEl, document.getElementById('ctx-files'));
 }
 
 function renderInsights(items) {
   if (!items || !items.length) return '<div class="empty">No insights found.</div>';
-  return items.map(function(i) { return '<div class="insight-item"><span class="tag tag-' + i.tag + '">' + i.tag + '</span><div class="insight-text">' + i.text + '</div><div class="insight-meta">' + (i.meta||'') + '</div></div>'; }).join('');
+  return items.map(function(i) {
+    return '<div class="insight-item"><span class="tag tag-' + (i.tag||'pattern') + '">' + (i.tag||'pattern') + '</span><div class="insight-text">' + i.text + '</div><div class="insight-meta">' + (i.meta||'') + '</div></div>';
+  }).join('');
 }
 
 function renderPriorities(items) {
   if (!items || !items.length) return '<div class="empty">No priorities found.</div>';
-  return items.map(function(p, i) { return '<div class="priority-item"><div class="priority-num">' + (i+1) + '</div><div><div class="priority-title">' + p.title + '</div><div class="priority-desc">' + p.desc + '</div></div></div>'; }).join('');
+  return items.map(function(p, i) {
+    return '<div class="priority-item"><div class="priority-num">' + (i+1) + '</div><div><div class="priority-title">' + p.title + '</div><div class="priority-desc">' + p.desc + '</div></div></div>';
+  }).join('');
 }
 
 function renderActions(items) {
   if (!items || !items.length) return '<div class="empty">No items found.</div>';
-  return items.map(function(a) { return '<div class="action-item"><div class="action-dot ' + (a.urgent?'urgent':'') + '"></div><div><div class="action-text">' + a.text + '</div><div class="action-owner">' + (a.owner||'') + '</div></div></div>'; }).join('');
+  return items.map(function(a) {
+    return '<div class="action-item"><div class="action-dot ' + (a.urgent?'urgent':'') + '"></div><div><div class="action-text">' + a.text + '</div><div class="action-owner">' + (a.owner||'') + '</div></div></div>';
+  }).join('');
 }
 
 function renderRecap(r) {
   if (!r) return '<div class="empty">No recap available.</div>';
-  return '<div class="recap-section"><div class="recap-label">Wins</div><div class="recap-text">' + r.wins + '</div></div><div class="recap-section"><div class="recap-label">Things to watch</div><div class="recap-text">' + r.concerns + '</div></div><div class="recap-section"><div class="recap-label">Going into next week</div><div class="recap-text">' + r.next_week + '</div></div>';
+  return '<div class="recap-section"><div class="recap-label">Wins</div><div class="recap-text">' + r.wins + '</div></div>' +
+    '<div class="recap-section"><div class="recap-label">Things to watch</div><div class="recap-text">' + r.concerns + '</div></div>' +
+    '<div class="recap-section"><div class="recap-label">Going into next week</div><div class="recap-text">' + r.next_week + '</div></div>';
 }
 
-function renderByProject(items) {
-  if (!items || !items.length) return '<div class="empty">No items found.</div>';
-  var grouped = {};
-  items.forEach(function(i) { var p = i.project || 'General'; if (!grouped[p]) grouped[p] = []; grouped[p].push(i); });
-  return Object.keys(grouped).map(function(proj) {
-    return '<div class="project-group"><div class="project-name">' + proj + '</div>' + grouped[proj].map(function(i) { return '<div class="insight-item"><span class="tag tag-' + (i.tag||'action') + '">' + (i.tag||'action') + '</span><div class="insight-text">' + i.text + '</div></div>'; }).join('') + '</div>';
-  }).join('');
-}
-
-function populateSection(safe, secName, analysis, ctx) {
+function populateSection(safe, secName, analysis) {
   var el = document.getElementById(safe + '_' + secName + '_content');
   if (!el) return;
-  if (secName === 'insights') el.innerHTML = ctx === 'Summon and Sell' ? renderByProject(analysis.insights) : renderInsights(analysis.insights);
+  if (secName === 'insights') el.innerHTML = renderInsights(analysis.insights);
   else if (secName === 'priorities') el.innerHTML = renderPriorities(analysis.priorities);
   else if (secName === 'actions') el.innerHTML = renderActions(analysis.followups);
   else if (secName === 'recap') el.innerHTML = renderRecap(analysis.recap);
 }
 
-async function analyzeContext(notes, ctx) {
+function safeParseJSON(text) {
+  var cleaned = text.replace(/```json|```/g,'').trim();
+  try { return JSON.parse(cleaned); } catch(e) {}
+  var match = cleaned.match(/\{[\s\S]*\}/);
+  if (match) { try { return JSON.parse(match[0]); } catch(e2) {} }
+  return null;
+}
+
+async function analyzeNotes(notes, ctx) {
   if (!notes.length) return null;
   var today = new Date().toLocaleDateString('en-GB', {weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  var isSnS = ctx === 'Summon and Sell';
-  var notesText = notes.map(function(n, i) { return 'Meeting ' + (i+1) + ': ' + n.title + ' (' + n.date + ')\n' + (n.content||'(no body)'); }).join('\n\n---\n\n');
-  var systemPrompt = isSnS
-    ? 'You analyze Summon and Sell (SEO consultancy) meeting notes. Extract client names from notes and group insights by client. Today: ' + today + '. Return ONLY JSON: {"insights":[{"tag":"action|opportunity|followup","text":"...","meta":"...","project":"client name"}],"priorities":[{"title":"...","desc":"..."}],"followups":[{"text":"...","owner":"...","urgent":true}],"recap":{"wins":"...","concerns":"...","next_week":"..."},"counts":{"insights":0,"actions":0,"patterns":0}}'
-    : 'You are an intelligence assistant for Bex (also called May or Rebecca), a Senior International Web Strategist and SEO contractor at ' + ctx + '. Today is ' + today + '. Only surface what matters to Bex specifically. Action items: ONLY tasks assigned to Bex, May, or Rebecca. Blockers: anything preventing Bex\'s work moving forward. Insights: things Bex may not have noticed where her SEO expertise is relevant, patterns across meetings, topics briefly mentioned in large syncs she could contribute to. Opportunities: strategic moves Bex could make. Follow-ups: specific people Bex needs to update or chase with context why. Do NOT summarize meetings. Do NOT surface other people\'s tasks. Be specific and actionable. Return ONLY JSON: {"insights":[{"tag":"pattern|opportunity","text":"...","meta":"..."}],"priorities":[{"title":"...","desc":"..."}],"today_tasks":[{"text":"...","owner":"Bex","urgent":true}],"followups":[{"text":"...","owner":"person to contact","urgent":false}],"blockers":[{"text":"...","meta":"..."}],"recap":{"wins":"...","concerns":"...","next_week":"..."},"counts":{"insights":0,"actions":0,"patterns":0}}';
+  var notesText = notes.slice(0,8).map(function(n, i) {
+    return 'Meeting ' + (i+1) + ': ' + n.title + ' (' + n.date + ')\n' + (n.content||'').slice(0,800);
+  }).join('\n\n---\n\n');
+
+  var systemPrompt = 'You are an assistant for Bex (Senior International Web Strategist, SEO contractor at ' + ctx + '). Today: ' + today + '.\n' +
+    'Extract ONLY what is relevant to Bex personally from these meeting notes.\n' +
+    'Action items: ONLY tasks assigned to Bex, May, or Rebecca.\n' +
+    'Insights: SEO patterns she may have missed, things she could contribute expertise to.\n' +
+    'Followups: specific people she needs to contact and why.\n' +
+    'Be concise. Max 3 items per array. No summaries. No other people\'s tasks.\n' +
+    'Return ONLY this JSON:\n' +
+    '{"insights":[{"tag":"pattern","text":"...","meta":"..."}],"priorities":[{"title":"...","desc":"..."}],"followups":[{"text":"...","owner":"...","urgent":false}],"recap":{"wins":"...","concerns":"...","next_week":"..."}}';
 
   var res = await fetch(CLAUDE_API, {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:6000, system:systemPrompt, messages:[{role:'user',content:'Analyze:\n\n'+notesText}]})
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1500,
+      system: systemPrompt,
+      messages: [{role:'user', content:'Analyze for Bex only:\n\n' + notesText}]
+    })
   });
   var data = await res.json();
   var text = (data.content||[]).filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('');
-  try {
-  return JSON.parse(text.replace(/```json|```/g,'').trim());
-} catch(e) {
-  var match = text.match(/\{[\s\S]*\}/);
-  if (match) {
-    try { return JSON.parse(match[0]); } catch(e2) { return null; }
-  }
-  return null;
-};
+  return safeParseJSON(text);
 }
 
-async function loadAndAnalyze() {
+function restoreFromCache() {
+  var cache = getCache();
+  if (!Object.keys(cache.analyses||{}).length) return false;
+  var contexts = Object.keys(cache.analyses);
+  contexts.forEach(function(ctx) {
+    var count = (cache.noteCounts||{})[ctx] || 0;
+    buildContextTab(ctx, count, false);
+  });
+  if (contexts.length > 0) {
+    var firstTab = document.querySelector('.ctx-tab:not([data-ctx="files"])');
+    if (firstTab) {
+      firstTab.classList.add('active');
+      document.getElementById('ctx-' + cssId(contexts[0])).classList.add('active');
+    }
+  }
+  contexts.forEach(function(ctx) {
+    var safe = cssId(ctx);
+    var analysis = cache.analyses[ctx];
+    getSections(ctx).forEach(function(sec) { populateSection(safe, sec, analysis); });
+  });
+  document.getElementById('m-total').textContent = cache.totalNotes || '—';
+  document.getElementById('m-new').textContent = '0';
+  document.getElementById('m-actions').textContent = cache.totalActions || '—';
+  document.getElementById('m-insights').textContent = cache.totalInsights || '—';
+  document.getElementById('last-updated').textContent = 'Cached: ' + (cache.lastSync || 'unknown');
+  document.getElementById('status').textContent = 'Showing cached results. Hit sync for new notes.';
+  return true;
+}
+
+async function loadAndAnalyze(fullResync) {
   var vercelUrl = document.getElementById('vercel-url').value.trim().replace(/^https?:\/\//,'');
   var dbId = document.getElementById('db-id').value.trim();
   var status = document.getElementById('status');
   var btn = document.getElementById('sync-btn');
   btn.disabled = true;
-  status.textContent = 'Fetching from Notion...';
 
-  document.querySelectorAll('.ctx-tab:not([data-ctx="files"])').forEach(function(t){t.remove();});
-  document.querySelectorAll('.ctx-view:not(#ctx-files)').forEach(function(v){v.remove();});
-  document.querySelectorAll('.ctx-tab').forEach(function(t){t.classList.remove('active');});
-  document.getElementById('ctx-files').classList.remove('active');
+  if (fullResync) {
+    localStorage.removeItem(STORAGE_KEY);
+    document.querySelectorAll('.ctx-tab:not([data-ctx="files"])').forEach(function(t){t.remove();});
+    document.querySelectorAll('.ctx-view:not(#ctx-files)').forEach(function(v){v.remove();});
+  }
+
+  var cache = getCache();
+  var lastSyncDate = fullResync ? null : (cache.lastNoteDate || null);
+  status.textContent = 'Fetching notes' + (lastSyncDate ? ' since ' + lastSyncDate.slice(0,10) : '') + '...';
 
   try {
-    var res = await fetch('https://' + vercelUrl + '/api/notion?dbId=' + dbId);
+    var url = 'https://' + vercelUrl + '/api/notion?dbId=' + dbId;
+    if (lastSyncDate) url += '&since=' + encodeURIComponent(lastSyncDate);
+    var res = await fetch(url);
     if (!res.ok) throw new Error('API error ' + res.status);
     var data = await res.json();
     var allNotes = data.results || [];
 
-    var byContext = {};
-    allNotes.forEach(function(n) { if (!byContext[n.context]) byContext[n.context]=[]; byContext[n.context].push(n); });
-    allNotesByContext = byContext;
-    var contexts = Object.keys(byContext);
+    var newNotes = lastSyncDate ? allNotes.filter(function(n) { return n.date > lastSyncDate; }) : allNotes;
 
     document.getElementById('m-total').textContent = allNotes.length;
-    document.getElementById('m-contexts').textContent = contexts.length;
-    contexts.forEach(function(ctx) { buildContextTab(ctx, byContext[ctx].length); });
+    document.getElementById('m-new').textContent = newNotes.length;
 
-    if (contexts.length > 0) {
-      var firstTab = document.querySelector('.ctx-tab:not([data-ctx="files"])');
-      if (firstTab) { firstTab.classList.add('active'); document.getElementById('ctx-' + cssId(contexts[0])).classList.add('active'); }
-    } else {
-      document.querySelector('[data-ctx="files"]').classList.add('active');
-      document.getElementById('ctx-files').classList.add('active');
+    if (!newNotes.length) {
+      status.textContent = 'No new notes since last sync.';
+      btn.disabled = false;
+      restoreFromCache();
+      return;
     }
 
-    status.textContent = allNotes.length + ' notes loaded, analyzing...';
+    var byContext = {};
+    newNotes.forEach(function(n) {
+      if (!byContext[n.context]) byContext[n.context] = [];
+      byContext[n.context].push(n);
+    });
+
+    var contexts = Object.keys(byContext);
+    var cachedAnalyses = cache.analyses || {};
+    var cachedCounts = cache.noteCounts || {};
     var totalActions = 0, totalInsights = 0;
+
+    allNotes.forEach(function(n) {
+      if (!cachedCounts[n.context]) cachedCounts[n.context] = 0;
+    });
+    Object.keys(byContext).forEach(function(ctx) {
+      cachedCounts[ctx] = (cachedCounts[ctx] || 0) + byContext[ctx].length;
+    });
+
+    var allContexts = Object.keys(cachedCounts);
+    allContexts.forEach(function(ctx) { buildContextTab(ctx, cachedCounts[ctx], !!byContext[ctx]); });
+
+    if (!document.querySelector('.ctx-tab:not([data-ctx="files"]).active')) {
+      var firstTab = document.querySelector('.ctx-tab:not([data-ctx="files"])');
+      if (firstTab) {
+        firstTab.classList.add('active');
+        document.getElementById('ctx-' + cssId(allContexts[0])).classList.add('active');
+      }
+    }
+
+    status.textContent = newNotes.length + ' new notes, analyzing...';
 
     for (var i = 0; i < contexts.length; i++) {
       var ctx = contexts[i];
-      var analysis = await analyzeContext(byContext[ctx], ctx);
+      var analysis = await analyzeNotes(byContext[ctx], ctx);
       if (analysis) {
+        cachedAnalyses[ctx] = analysis;
         var safe = cssId(ctx);
-        getSections(ctx).forEach(function(sec) { populateSection(safe, sec, analysis, ctx); });
-        totalActions += analysis.counts && analysis.counts.actions ? analysis.counts.actions : 0;
-        totalInsights += analysis.counts && analysis.counts.insights ? analysis.counts.insights : 0;
+        getSections(ctx).forEach(function(sec) { populateSection(safe, sec, analysis); });
+        totalActions += (analysis.followups||[]).length;
+        totalInsights += (analysis.insights||[]).length;
       }
     }
+
+    var allContextsWithCache = Object.keys(cachedAnalyses);
+    allContextsWithCache.forEach(function(ctx) {
+      if (!byContext[ctx]) {
+        var safe = cssId(ctx);
+        var analysis = cachedAnalyses[ctx];
+        getSections(ctx).forEach(function(sec) { populateSection(safe, sec, analysis); });
+        totalActions += (analysis.followups||[]).length;
+        totalInsights += (analysis.insights||[]).length;
+      }
+    });
+
+    var latestDate = newNotes.reduce(function(max, n) { return n.date > max ? n.date : max; }, '');
+    var newCache = {
+      analyses: cachedAnalyses,
+      noteCounts: cachedCounts,
+      lastNoteDate: latestDate || lastSyncDate,
+      lastSync: new Date().toLocaleTimeString(),
+      totalNotes: allNotes.length,
+      totalActions: totalActions,
+      totalInsights: totalInsights
+    };
+    saveCache(newCache);
 
     document.getElementById('m-actions').textContent = totalActions || '—';
     document.getElementById('m-insights').textContent = totalInsights || '—';
     document.getElementById('last-updated').textContent = 'Updated ' + new Date().toLocaleTimeString();
-    status.textContent = allNotes.length + ' notes analyzed across ' + contexts.length + ' contexts';
+    status.textContent = newNotes.length + ' new notes analyzed.';
   } catch(e) {
     status.textContent = 'Error: ' + e.message;
     document.querySelector('[data-ctx="files"]').classList.add('active');
@@ -331,7 +438,10 @@ function handleFiles(files) {
   for (var i = 0; i < files.length; i++) {
     (function(file) {
       var reader = new FileReader();
-      reader.onload = function(e) { uploadedFileData.push({name:file.name, content:e.target.result.slice(0,4000)}); renderFilePills(); };
+      reader.onload = function(e) {
+        uploadedFileData.push({name:file.name, content:e.target.result.slice(0,4000)});
+        renderFilePills();
+      };
       reader.readAsText(file);
     })(files[i]);
   }
@@ -353,14 +463,19 @@ async function analyzeFiles() {
   var res = await fetch(CLAUDE_API, {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:1000, system:'You are an SEO analyst. Analyze these data files and return key insights, trends, and recommended actions. Be specific and direct.', messages:[{role:'user',content:'Analyze:\n\n'+filesText}]})
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 2000,
+      system: 'You are an SEO analyst for Bex, a Senior International Web Strategist. Analyze these files and return specific insights, trends, and recommended actions relevant to her work. Be direct and actionable.',
+      messages: [{role:'user', content:'Analyze:\n\n' + filesText}]
+    })
   });
   var data = await res.json();
   var text = (data.content||[]).filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('');
   document.getElementById('file-result').innerHTML = '<div class="file-result">' + text + '</div>';
 }
 
-function crossRef() { window.open('https://claude.ai','_blank'); }
+window.onload = function() { restoreFromCache(); };
 </script>
 </body>
 </html>
