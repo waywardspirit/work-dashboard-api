@@ -46,7 +46,7 @@ module.exports = async function handler(req, res) {
       });
 
       content = content.trim();
-      const jobMatch = content.match(/JOB\s*=\s*\(([^)]+)\)/i);
+      const jobMatch = content.match(/JOB[S]?\s*=\s*\(?([^)\n]+)\)?/i);
       let context = 'Personal';
       if (jobMatch) {
         const val = jobMatch[1].trim().toLowerCase();
