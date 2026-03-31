@@ -262,7 +262,7 @@ function safeParseJSON(text) {
 async function analyzeNotes(notes, ctx) {
   if (!notes.length) return null;
   var today = new Date().toLocaleDateString('en-GB', {weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  var notesText = notes.slice(0,5).map(function(n, i) {
+  var notesText = notes.slice(0,8).map(function(n, i) {
     return 'Meeting ' + (i+1) + ': ' + n.title + ' (' + n.date + ')\n' + (n.content||'').slice(0,2000);
   }).join('\n\n---\n\n');
 
