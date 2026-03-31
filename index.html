@@ -402,7 +402,7 @@ async function loadAndAnalyze(fullResync) {
         var safe = cssId(ctx);
         getSections(ctx).forEach(function(sec) { populateSection(safe, sec, analysis); });
         totalActions += (analysis.followups||[]).length;
-        totalInsights += (analysis.insights||[]).length;
+        totalInsights += (analysis.insights||[]).filter(function(i){return i.text;}).length;
       }
     }
 
