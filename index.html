@@ -266,15 +266,21 @@ async function analyzeNotes(notes, ctx) {
     return 'Meeting ' + (i+1) + ': ' + n.title + ' (' + n.date + ')\n' + (n.content||'').slice(0,2000);
   }).join('\n\n---\n\n');
 
-  var systemPrompt = 'You are an assistant for Bex (Senior International Web Strategist, SEO contractor at ' + ctx + '). Today: ' + today + '.\n' +
-    'Extract ONLY what is relevant to Bex personally from these meeting notes.\n' +
-    'Action items: tasks explicitly assigned to Bex, May, or Rebecca (look for these names in parentheses or anywhere in bullet points), AND any SEO, international, or web strategy tasks where no owner is named (assume those are Bex\'s).\n' +
-'Blockers: anything blocking SEO, international, localization, or web strategy work.\n' +
-    'Insights: SEO patterns she may have missed, things she could contribute expertise to.\n' +
-    'Followups: specific people she needs to contact and why.\n' +
-    'Be concise. Max 3 items per array. No summaries. No other people\'s tasks.\n' +
-    'Return ONLY this JSON:\n' +
-    '{"insights":[{"tag":"pattern","text":"...","meta":"..."}],"priorities":[{"title":"...","desc":"..."}],"followups":[{"text":"...","owner":"...","urgent":false}],"recap":{"wins":"...","concerns":"...","next_week":"..."}}';
+  var systemPrompt = 'You are a strategic intelligence assistant for Bex (Senior International Web Strategist, SEO contractor at ' + ctx + '). Today: ' + today + '.\n' +
+  'Analyze these meeting notes and produce TWO types of output:\n\n' +
+  '1. INSIGHTS: Connect dots across multiple meetings to surface non-obvious findings. Each insight must have:\n' +
+  '   - A specific observation with evidence from the notes\n' +
+  '   - Why it matters for Bex\'s work specifically\n' +
+  '   - The implication or risk if unaddressed\n' +
+  '   Example: "International scope is being planned around a US product that hasn\'t launched yet. If the US May launch slips, international planning becomes wasted work."\n\n' +
+  '2. PATTERNS: Recurring themes appearing across 2+ meetings that are growing in urgency.\n' +
+  '   Each pattern must cite specific evidence from multiple meetings.\n\n' +
+  'Action items: ONLY tasks assigned to Bex, May, or Rebecca by name, OR unowned SEO/international/web strategy tasks.\n' +
+  'Followups: specific people Bex needs to contact with exact context why.\n' +
+  'Priorities: Bex\'s top 3 this week based on deadlines and blockers mentioned.\n' +
+  'Do NOT summarize meetings. Do NOT surface other people\'s tasks. Be specific.\n' +
+  'Return ONLY this JSON:\n' +
+  '{"insights":[{"tag":"insight","text":"...","meta":"evidence + why it matters"}],"priorities":[{"title":"...","desc":"..."}],"followups":[{"text":"...","owner":"...","urgent":false}],"recap":{"wins":"...","concerns":"...","next_week":"..."}}';
 
   var res = await fetch(CLAUDE_API, {
     method: 'POST',
